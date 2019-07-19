@@ -27,12 +27,20 @@ import random
 #  others split a word into two parts, then give synonyms for the word
 #  and those words its parts look like.
 
-riddles=open('riddles.tsv').read().splitlines()
+riddles=open('riddles.tsv').read().splitlines()[1:]
+
 print(len(riddles))
 
 random.shuffle(riddles) # shuffle the riddles
-print('\n'.join(riddles))
-print()
+
+def unquoteList(l):
+    result=[]
+    for i in l:
+        if i.startswith('"') and i.endswith('"'):
+            result.append(i[1:-1].replace('""','"'))
+        else:
+            result.append(i)
+    return result
 
 def length_as_string(x):
     if ' 'not in x and '++' not in x:
@@ -77,7 +85,7 @@ def count_syllables(x):
     return length_as_string(y)
 
 for i in riddles:
-    parts=i.split('\t')
+    parts=unquoteList(i.split('\t'))
     if len(parts)<3:
         print(parts)
         raise ValueError ('Missing explanation')
